@@ -3,11 +3,15 @@ Keras implementation of NLP based cough and sneeze detector based on GRU.
 
 This model has been designed to detect coughing and sneezing sounds by listening to ambient audio on an embedded/mobile hardware using any microphone connected to it. This can run in the background as an app on mobile users given appropriate permissions or as listening pods in public areas where large number of people congregate. Considering the COVID-19 pandemic and future scenarios, this can be used to detect any anomalies in the cough/sneeze baseline count of the general public and raise location and time specific alerts. The system can be designed to maintain user anonymity while capturing data and can run a completely on-device processing without cloud/network audio upload. The application will communicate the statistics to the central server following a pre-configured interval.
 
-<br>
-<h1>hiii</h1>
 <figure>
-  <img title="hi" alt="location alerts" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
-  <p text-align="center">cough/sneeze detection heatmaps</p>  
+  <img title="gather data" alt="location alerts" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/displayImage1.jpg?raw=true">
+  <p align="center"><strong>Unobtrusive data collection</strong></p>  
+</figure>
+
+<br>
+<figure>
+  <img title="analytics" alt="location alerts" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
+  <p align="center"><strong>Cough/sneeze detection heatmaps</strong></p>  
 </figure>
 
 
@@ -17,6 +21,7 @@ The model is implemented using Keras with Tensorflow backend. The implementation
 
 <p align="center">
   <img title="Gated Recurrent Unit Architecture - simplified diagram" alt="gated recurrent unit" width="65%" height="65%" src="https://upload.wikimedia.org/wikipedia/commons/3/37/Gated_Recurrent_Unit%2C_base_type.svg?raw=true">
+<p align="center"><strong>GRU cell</strong></p>
 </p>
 
 The model is trained on Sick Sounds Dataset (https://osf.io/tmkud/). The model can be trained with more data to reject background noise better, and have higher sensitivity and specificity to cough and sneeze sounds occuring under different background noise conditions.
@@ -25,6 +30,8 @@ The model is trained on Sick Sounds Dataset (https://osf.io/tmkud/). The model c
 
 <p align="center">
   <img title="Functional Architecture" alt="proposed solution" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/flowChart_Idea.png?raw=true">
+<p align="center"><strong>Functional Architecture</strong></p>
+ 
 </p>
 The proposed solution consists of:
 
