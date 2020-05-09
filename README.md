@@ -7,6 +7,8 @@ The model is implemented using Keras with Tensorflow backend. The implementation
 
 The model is trained on Sick Sounds Dataset (https://osf.io/tmkud/). The model can be trained with more data to reject background noise better, and have higher sensitivity and specificity to cough and sneeze sounds occuring under different background noise conditions.
 
+![Image description](https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/combine.png)
+
 ## Pre-requisites:
 Keras==2.3.1
 matplotlib==3.2.1
