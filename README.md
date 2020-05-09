@@ -5,8 +5,8 @@ This model has been designed to detect coughing and sneezing sounds by listening
 
 <br>
 <p align="center">
-  <img alt="cough detection" src="https://github.com/AnjaliMathew/DL-based-Cough-Sneeze-Detector/blob/media/combine.png?raw=true"> <br><br> 
-  <img alt="location alerts" width="60%" height="60%" src="https://github.com/AnjaliMathew/DL-based-Cough-Sneeze-Detector/blob/media/hotspot_map.png?raw=true">
+  <img alt="cough detection" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/displayImage1.jpg?raw=true"> <br><br> 
+  <img alt="location alerts" width="60%" height="60%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
 </p>
 
 
