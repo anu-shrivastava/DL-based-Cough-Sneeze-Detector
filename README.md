@@ -5,17 +5,10 @@ This model has been designed to detect coughing and sneezing sounds by listening
 
 <br>
 <p align="center">
-  <img alt="cough detection" src="https://github.com/AnjaliMathew/DL-based-Cough-Sneeze-Detector/blob/media/combine.png?raw=true"> <br><br> 
-  <img alt="location alerts" width="65%" height="65%" src="https://github.com/AnjaliMathew/DL-based-Cough-Sneeze-Detector/blob/media/hotspot_map.png?raw=true">
+  <img alt="cough detection" src="https://github.com/AnjaliMathew/DL-based-Cough-Sneeze-Detector/blob/media/combine.png?raw=true">
 </p>
-
 
 The model is implemented using Keras with Tensorflow backend. The implementation uses the Gated Recurrent Unit to detect cough/sneeze sounds. 
-
-<br>
-<p align="center">
-  <img alt="gated recurrent unit" width="70%" height="70%" src="https://github.com/AnjaliMathew/DL-based-Cough-Sneeze-Detector/blob/media/gru2.png?raw=true">
-</p>
 
 The model is trained on Sick Sounds Dataset (https://osf.io/tmkud/). The model can be trained with more data to reject background noise better, and have higher sensitivity and specificity to cough and sneeze sounds occuring under different background noise conditions.
 
