@@ -24,6 +24,12 @@ The model is trained on Sick Sounds Dataset (https://osf.io/tmkud/). The model c
 <p align="center">
   <img alt="proposed solution" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/flowChart_Idea.png?raw=true">
 </p>
+The proposed solution consists of:
+i. Data injection platform
+
+ii. central server
+
+iii. analytics insights/hotspot generation
 
 ## Pre-requisites:
 Keras==2.3.1
