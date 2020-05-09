@@ -6,7 +6,7 @@ This model has been designed to detect coughing and sneezing sounds by listening
 <br>
 <p align="center">
   <img alt="cough detection" width="60%" height="60%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/displayImage1.jpg?raw=true"> <br><br> 
-  <img alt="location alerts" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
+  <img title="cough/sneeze detection heatmaps" alt="location alerts" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
 </p>
 
 
@@ -14,7 +14,7 @@ The model is implemented using Keras with Tensorflow backend. The implementation
 
 <br>
 <p align="center">
-  <img alt="gated recurrent unit" width="65%" height="65%" src="https://upload.wikimedia.org/wikipedia/commons/3/37/Gated_Recurrent_Unit%2C_base_type.svg?raw=true">
+  <img title="Gated Recurrent Unit Architecture - simplified diagram" alt="gated recurrent unit" width="65%" height="65%" src="https://upload.wikimedia.org/wikipedia/commons/3/37/Gated_Recurrent_Unit%2C_base_type.svg?raw=true">
 </p>
 
 The model is trained on Sick Sounds Dataset (https://osf.io/tmkud/). The model can be trained with more data to reject background noise better, and have higher sensitivity and specificity to cough and sneeze sounds occuring under different background noise conditions.
@@ -22,7 +22,7 @@ The model is trained on Sick Sounds Dataset (https://osf.io/tmkud/). The model c
 ## Proposed Solution
 
 <p align="center">
-  <img alt="proposed solution" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/flowChart_Idea.png?raw=true">
+  <img title="Functional Architecture" alt="proposed solution" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/flowChart_Idea.png?raw=true">
 </p>
 The proposed solution consists of:
 
