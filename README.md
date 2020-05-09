@@ -9,6 +9,11 @@ This model has been designed to detect coughing and sneezing sounds by listening
   <img title="cough/sneeze detection heatmaps" alt="location alerts" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
 </p>
 
+<figure>
+  <img title="cough/sneeze detection heatmaps" alt="location alerts" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
+  <figcaption>cough/sneeze detection heatmaps</figcaption>
+</figure>
+
 
 The model is implemented using Keras with Tensorflow backend. The implementation uses the Gated Recurrent Unit to detect cough/sneeze sounds. 
 
