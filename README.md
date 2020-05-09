@@ -5,8 +5,8 @@ This model has been designed to detect coughing and sneezing sounds by listening
 
 <br>
 <p align="center">
-  <img alt="cough detection" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/displayImage1.jpg?raw=true"> <br><br> 
-  <img alt="location alerts" width="60%" height="60%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
+  <img alt="cough detection" width="60%" height="60%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/displayImage1.jpg?raw=true"> <br><br> 
+  <img alt="location alerts" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
 </p>
 
 
@@ -22,7 +22,7 @@ The model is trained on Sick Sounds Dataset (https://osf.io/tmkud/). The model c
 ## Proposed Solution
 
 <p align="center">
-  <img alt="gated recurrent unit" width="65%" height="65%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/flowChart_Idea.png?raw=true">
+  <img alt="proposed solution" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/flowChart_Idea.png?raw=true">
 </p>
 
 ## Pre-requisites:
