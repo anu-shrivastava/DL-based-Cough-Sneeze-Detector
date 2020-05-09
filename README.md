@@ -58,6 +58,6 @@ For the complete list of requirements install requirements using:
 
 
 ## Instructions to run
-Run python3 cough_sneeze_inference.py to run the sample input. Detection output is displayed in the terminal.
+Run `$ python3 cough_sneeze_inference.py` to run the sample input. Detection output is displayed in the terminal.
 
 
