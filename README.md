@@ -3,10 +3,10 @@ Keras implementation of NLP based cough and sneeze detector based on GRU.
 
 This model has been designed to detect coughing and sneezing sounds by listening to ambient audio on an embedded/mobile hardware using any microphone connected to it. This can run in the background as an app on mobile users given appropriate permissions or as listening pods in public areas where large number of people congregate. Considering the COVID-19 pandemic and future scenarios, this can be used to detect any anomalies in the cough/sneeze baseline count of the general public and raise location and time specific alerts. The system can be designed to maintain user anonymity while capturing data and can run a completely on-device processing without cloud/network audio upload. The application will communicate the statistics to the central server following a pre-configured interval.
 
-<figure align="center">
+<p align="center">
   <img title="gather data" alt="location alerts" width="60%" height="60%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/displayImage1.jpg?raw=true">
   <p align="center"><strong>Unobtrusive data collection</strong></p>  
-</figure>
+</p>
 
 <br>
 <figure>
