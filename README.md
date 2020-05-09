@@ -25,11 +25,15 @@ The model is trained on Sick Sounds Dataset (https://osf.io/tmkud/). The model c
   <img alt="proposed solution" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/flowChart_Idea.png?raw=true">
 </p>
 The proposed solution consists of:
-i. Data injection platform
 
-ii. central server
+### i. Data Injection Platform
+Cough/sneeze data can be collected either from voluntary installation of mobile apps by individual users or from public installations of microphone enabled IoT devices at public places. Mobile app users can anonymously share cough/sneeze detection information along with approximate location when sufficient permissions are granted on the device. All audio processing will be done on the edge(device) and no audio clips or streams are sent from the device to the server. Anonymous actionable information is sent to the central server at configurable intervals. The battery operated IoT devices installed at known public locations of high footfall with a GPRS connection which can transmit low bandwidth metadata streams to the server.
 
-iii. analytics insights/hotspot generation
+### ii. Central Server (archival and insight generation)
+The central server collects and archives the registered cough and sneeze counts, times and locations over a large enough duration to create a baseline cough/sneeze pattern. The raw data can be used as-is or can be used along with the historical predictions learnt on-the-go to detect anomalies. 
+
+### iii. Analytics visualization
+The data can be used in conjuction with population density, demographical information etc. for use by healthcare professionals to respond faster and better to changing pandemic trends, and for early detection of new disease symptoms.
 
 ## Pre-requisites:
 Keras==2.3.1
