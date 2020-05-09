@@ -52,7 +52,11 @@ pydub==0.23.1
 scikit-learn==0.22.2
 tensorflow==2.2.0
 
-For the complete list of requirements install requirements using pip install -r requirements.txt
+For the complete list of requirements install requirements using:
+####Inline code
+
+`$ pip install -r requirements.txt
+
 
 ## Instructions to run
 Run python3 cough_sneeze_inference.py to run the sample input. Detection output is displayed in the terminal.
