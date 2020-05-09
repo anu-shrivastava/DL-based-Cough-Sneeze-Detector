@@ -7,7 +7,7 @@ This model has been designed to detect coughing and sneezing sounds by listening
 <h1>hiii</h1>
 <figure>
   <img title="hi" alt="location alerts" width="100%" height="100%" src="https://github.com/cobaltKite/DL-based-Cough-Sneeze-Detector/blob/master/imgs/map3.jpg?raw=true">
-  <p margin-left="33% margin-top="-7%">cough/sneeze detection heatmaps</p>  
+  <p text-align="center">cough/sneeze detection heatmaps</p>  
 </figure>
 
 
