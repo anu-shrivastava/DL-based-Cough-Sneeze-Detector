@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 
-
 def graph_spectrogram(wav_file):
     rate, data = get_wav_info(wav_file)
     nfft = 200  # Length of each window segment
@@ -13,7 +12,6 @@ def graph_spectrogram(wav_file):
     elif nchannels == 2:
         pxx, freqs, bins, im = plt.specgram(data[:, 0], nfft, fs, noverlap=noverlap)
     return pxx
-
 
 def get_wav_info(wav_file):
     rate, data = wavfile.read(wav_file)
