@@ -1,0 +1,10 @@
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\audioset_0sDlmseq2Kg_40_45.wav
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\audioset_6qj-aQ_yzVE_95_100.wav
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\audioset_8cM-69gMf5g_8_13.wav
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\audioset_9h3a7fN0f-c_245_250.wav
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\audioset__0WKVY0n8aE_155_160.wav
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\audioset__iLZB3eA2gM_0_5.wav
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\audioset__TzZ0zRRaV0_8_13.wav
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\esc50_3-146873-A-24.wav
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\esc50_4-157296-A-24.wav
+file://E:\ANU\code\coughSneezeDetection\sampleInput\train\sick\esc50_5-208761-A-24.wav

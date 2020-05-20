@@ -1,88 +1,78 @@
 # Cough and Sneeze detector
 
 import numpy as np
-from pydub import AudioSegment
-from keras.layers import Dense, Activation, Dropout, Input, TimeDistributed, Conv1D
-from keras.layers import GRU, BatchNormalization
-from keras.models import Model, load_model
+from pydub import AudioSegment, playback
+from keras.models import load_model, model_from_json
 from utilities import *
 from microphone_input import take_input
 
 
-def create_model(input_shape):
-    X_input = Input(shape=input_shape)
-
-    # Step 1: CONV layer : for extracting features
-    X = Conv1D(filters=196, kernel_size=15, strides=4)(X_input)  # CONV1D
-    X = BatchNormalization(axis=-1, momentum=0.99, epsilon=0.001)(X)  # Batch normalization
-    X = Activation('relu')(X)  # ReLu activation
-    X = Dropout(0.8)(X)  # dropout (use 0.8)
-
-    # Step 2: First GRU Layer
-    X = GRU(units=128, return_sequences=True)(X)  # GRU (use 128 units and return the sequences)
-    X = Dropout(0.8)(X)  # dropout (use 0.8)
-    X = BatchNormalization(axis=-1, momentum=0.99, epsilon=0.001)(X)  # Batch normalization
-
-    # Step 3: Second GRU Layer
-    X = GRU(units=128, return_sequences=True)(X)  # GRU (use 128 units and return the sequences)
-    X = Dropout(0.8)(X)  # dropout (use 0.8)
-    X = BatchNormalization(axis=-1, momentum=0.99, epsilon=0.001)(X)  # Batch normalization
-    X = Dropout(0.8)(X)  # dropout (use 0.8)
-
-    # Step 4: Time-distributed dense layer 
-    X = TimeDistributed(Dense(1, activation="sigmoid"))(X)  # time distributed  (sigmoid)
-
-    model = Model(inputs=X_input, outputs=X)
-
-    return model
-
-
 def detect_sickSound(filename, model):
-    plt.rcParams['image.cmap'] = 'gray'
+    plt.rcParams['image.cmap'] = 'gist_earth_r'
     plt.subplot(2, 1, 1)
     x = graph_spectrogram(filename)
     x = x.swapaxes(0, 1)
     x = np.expand_dims(x, axis=0)
+    plt.ylabel('Frequency')
+
     predictions = model.predict(x)
 
     plt.subplot(2, 1, 2)
     plt.plot(predictions[0, :, 0], color='green')
-    plt.ylabel('Probability')
+    plt.ylabel('Prediction confidence')
     plt.savefig('output//audio.png')
-    return predictions
+    return predictions, plt
 
 # Preprocess the audio to the correct format
 def preprocess_input(filename):
     # Trim or pad audio segment to 10000ms
-    padding = AudioSegment.silent(duration=10000)
-    segment = AudioSegment.from_wav(filename)[:10000]
+    padding = AudioSegment.silent(duration=5000)
+    segment = AudioSegment.from_wav(filename)[:5000]
     segment = padding.overlay(segment)
     # Set frame rate to 44100
     segment = segment.set_frame_rate(44100)
     # Export as wav
     segment.export(filename, format='wav')
 
+def beepOnDetection(threshold, prediction, file_name):
+    """
+    :param threshold: float value between 0 and 1
+    :param prediction: list of detection confidence values for each frame
+    :param file_name: path of audio file whoose prediction values are passed
+    :return: nothing
+    """
+    beep_file = "beep.wav"
 
-def main():
-    Tx = 5511
-    Ty = 1375
-    n_freq = 101
-
-    model = create_model(input_shape=(Tx, n_freq))
-    model.summary()
-    model = load_model('./model/tr_model.h5')
-
-    file_name = take_input()
-
-    preprocess_input(file_name)
-    prediction = detect_sickSound(file_name, model)
-
-    consecutive_timesteps=0
-    threshold= 0.2
+    Ty = len(prediction[0])
+    consecutive_timesteps = 0
+    segment = AudioSegment.from_wav(file_name)
+    beep = AudioSegment.from_wav(beep_file)
     for i in range(Ty):
         consecutive_timesteps += 1
-        if prediction[0,i,0] > threshold and consecutive_timesteps > 75:
-            print("you just coughed/sneezed")
+        if prediction[0, i, 0] > threshold and consecutive_timesteps > 75:
+            segment = segment.overlay(beep, position=((i / Ty) * segment.duration_seconds) * 1000)
+            print("I am {:.2f}% confident you just coughed/sneezed ".format(prediction[0, i, 0] * 100))
+            consecutive_timesteps = 0
+    playback.play(segment)
+    segment.export("output//beep_output.wav", format='wav')
+
+
+
+def main():
+    with open("./model/newModel.json", 'r') as json_file:
+        model_in_json = json_file.read()
+    model = model_from_json(model_in_json)
+    model.load_weights('./model/newModel.h5')
+    # model.summary()
+
+    file_name = take_input()
+    preprocess_input(file_name)
+    prediction, plot = detect_sickSound(file_name, model)
+
+    threshold= 0.48
+    plot.show()
+    beepOnDetection(threshold, prediction, file_name)
+
 
 if __name__ == "__main__":
     main()

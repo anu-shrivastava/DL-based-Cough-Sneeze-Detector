@@ -1,99 +1,31 @@
 import numpy as np
 from utilities import *
-
-def get_random_time_segment(segment_ms):
-    """
-    Gets a random time segment of duration segment_ms in a 10,000 ms audio clip.
-    
-    Arguments:
-    segment_ms -- the duration of the audio clip in ms ("ms" stands for "milliseconds")
-    
-    Returns:
-    segment_time -- a tuple of (segment_start, segment_end) in ms
-    """
-
-    # Make sure segment doesn't run past the 10sec background
-    segment_start = np.random.randint(low = 0, high = 10000 - segment_ms)
-    segment_end = segment_start + segment_ms - 1
-
-    return (segment_start, segment_end)
-    
-
-
-def is_overlapping(segment_time, previous_segments):
-    """
-    Checks if the time of a segment overlaps with the times of existing segments.
-    
-    Arguments:
-    segment_time -- a tuple of (segment_start, segment_end) for the new segment
-    previous_segments -- a list of tuples of (segment_start, segment_end) for the existing segments
-    
-    Returns:
-    True if the time segment overlaps with any of the existing segments, False otherwise
-    """
-
-    segment_start, segment_end = segment_time
-
-    # initially there is no overlap is assumed
-    overlap = False
-
-    # loop over the previous segments already overlayed for finding any overlap with current segment
-    for previous_start, previous_end in previous_segments:
-        if segment_start <= previous_end and segment_start >= previous_start:
-            overlap = True
-
-    return overlap
-    
-
-def insert_audio_clip(background, audio_clip, previous_segments):
-    """
-    Insert a new audio segment over the background noise at a random time step, making sure that the 
-    audio segment does not overlap with existing segments.
-    
-    Arguments:
-    background -- a 10 second background audio recording.  
-    audio_clip -- the audio clip to be inserted/overlaid. 
-    previous_segments -- times where audio segments have already been placed
-    
-    Returns:
-    new_background -- the updated background audio
-    """
-
-    # Get the duration of the audio clip in ms
-    segment_ms = len(audio_clip)
-
-    # Step 1: get a ranodm time segment
-    segment_time = get_random_time_segment(segment_ms)
-
-    # Step 2: Check for overlap with previous time segments
-    while is_overlapping(segment_time, previous_segments):
-        segment_time = get_random_time_segment(segment_ms)
-
-    # Step 3: Add the new segment_time to the list of previous_segments 
-    previous_segments.append(segment_time)
-   
-    # Step 4: Superpose audio segment and background
-    new_background = background.overlay(audio_clip, position=segment_time[0])
-
-    return new_background, segment_time
- 
+import os
+from pydub import AudioSegment
+import pandas as pd
+import ast
+from collections import defaultdict, namedtuple
+from model import create_model
+from keras.optimizers import Adam
+import random
+pd.set_option("display.max_columns", None)
 
 
 def insert_ones(y, segment_end_ms):
     """
-    for updating the label vector y. The labels of the 50 output steps strictly after the end of the segment 
-    should be set to 1. 
-    
+    for creating the label vector y. The labels of the 50 output steps strictly after the end of the segment
+    are set to 1.
+
     Arguments:
     y -- numpy array of shape (1, Ty), the labels of the training example
     segment_end_ms -- the end time of the segment in ms
-    
+
     Returns:
     y -- updated labels
     """
 
     # duration of the background (in terms of spectrogram time-steps)
-    segment_end_y = int(segment_end_ms * Ty / 10000.0)
+    segment_end_y = int(segment_end_ms * Ty / 5000.0)
 
     # last timestep for inserting 1
     end_index = y.shape[1] - 1
@@ -102,73 +34,139 @@ def insert_ones(y, segment_end_ms):
         end_index = segment_end_y + 51
     # make the required steps as 1
     y[0, segment_end_y + 1:end_index] = 1
-    
+
     return y
-    
 
+def load_audio(filePath):
+    """ loads raw audio from disk
 
-def create_training_example(background, activates, negatives):
-    """
-    Creates a training example with a given background, activates, and negatives.
-    
     Arguments:
-    background -- a 10 second background audio recording
-    activates -- a list of audio segments of the word "activate"
-    negatives -- a list of audio segments of random words that are not "activate"
-    
+    filePath -- absolute path of file
+
     Returns:
-    x -- the spectrogram of the training example
-    y -- the label at each time step of the spectrogram
-    """
+    audioClip -- """
+    audioClip = AudioSegment.from_wav(filePath)
+    return audioClip
 
-    # Set the random seed
-    np.random.seed(18)
+def load_csv(csvPath):
+    csvData =[]
+    if os.path.exists(csvPath):
+        csvData = pd.read_csv(csvPath, header = [1])
+    else:
+        print("file does not exist: ", csvPath)
+        exit(-1)
+    return csvData
 
-    # Make background quieter
-    background = background - 20
+def preprocessAudioFile(wavFile):
+    wavFile = match_target_amplitude(wavFile, -20)
+    msDuration = len(wavFile)
+    #make sure all audio is exactly 5s long. clip/append 0 otherwise
+    if msDuration < 5000:
+        silence = AudioSegment.silent(duration=(5000-msDuration))
+        wavFile += silence
+    else:
+        wavFile = wavFile[:5000]
+    #write modified file to disk as I couldnt find a way to pass an audio segment directly to wavfile
+    file_handle = wavFile.export("trainFile" + ".wav", format="wav")
+    wavSpec = graph_spectrogram("trainFile.wav")
 
-    # Step 1: Initialize y (label vector) of zeros 
-    y = np.zeros((1, Ty))
+    return wavSpec
 
-    # Step 2: Initialize segment times as empty list 
-    previous_segments = list()
-   
-    # Select 0-4 random "activate" audio clips from the entire list of "activates" recordings
-    number_of_activates = np.random.randint(0, 5)
-    random_indices = np.random.randint(
-        len(activates), size=number_of_activates)
-    random_activates = [activates[i] for i in random_indices]
+def extractDataFromDF(inputDataFrame):
+    pathLblSecs_dict = defaultdict(list)
+    anno = namedtuple('anno', 'label end_ms')
 
-    # Step 3: Loop over randomly selected "activate" clips and insert in background
-    for random_activate in random_activates:
-        # Insert the audio clip on the background
-        background, segment_time = insert_audio_clip(
-            background, random_activate, previous_segments)
-        # Retrieve segment_start and segment_end from segment_time
-        segment_start, segment_end = segment_time
-        # Insert labels in "y"
-        y = insert_ones(y, segment_end)
-   
-    # Select 0-2 random negatives audio recordings from the entire list of "negatives" recordings
-    number_of_negatives = np.random.randint(0, 3)
-    random_indices = np.random.randint(
-        len(negatives), size=number_of_negatives)
-    random_negatives = [negatives[i] for i in random_indices]
+    for _, eachRow in inputDataFrame.iterrows():
+        filePath = eachRow[0][9:-2]
+        endmSec = round(float(eachRow[1])*1000, 2)
+        label = ast.literal_eval(eachRow[2])
 
-    # Step 4: Loop over randomly selected negative clips and insert in background
-    for random_negative in random_negatives:
-        # Insert the audio clip on the background
-        background, _ = insert_audio_clip(
-            background, random_negative, previous_segments)
-    
-    # Standardize the volume of the audio clip
-    background = match_target_amplitude(background, -20.0)
+        pathLblSecs_dict[filePath].append(anno(label, endmSec))
 
-    # Export new training example
-    file_handle = background.export("train" + ".wav", format="wav")
-    print("File (train.wav) was saved in your directory.")
+    return pathLblSecs_dict
 
-    # Get and plot spectrogram of the new recording (background with superposition of positive and negatives)
-    x = graph_spectrogram("train.wav")
+def get_sickDataAndLabels(annotationCsvPath, outputLabelShape):
+    annotationDataDF = load_csv(annotationCsvPath)
+    slicedAnnoDataDF = annotationDataDF[['file_list', 'temporal_segment_end', 'metadata']]
+    path_LblSecsTup_dict = extractDataFromDF(slicedAnnoDataDF)
 
-    return x, y
+    # read and append audio and label for each file in csv
+    xList, yList = [], []
+    for filePath, annoData in path_LblSecsTup_dict.items():
+        x = preprocessAudioFile(load_audio(filePath)).transpose()
+
+        y = np.zeros(outputLabelShape)
+        # both cough and sneeze are currently labeled as one category
+        for eachEntry in annoData:
+            y = insert_ones(y, eachEntry.end_ms)
+            # print(filePath, eachEntry.end_ms, eachEntry.label["sick"], y.shape)
+
+        xList.append(x)
+        yList.append(y.transpose())
+
+    return xList, yList
+
+def get_not_sickDataAndLabels(audioDir, outputLabelShape):
+    xList = []
+    yList = []
+    for root, _, filenames in os.walk(audioDir):
+        if filenames:
+            for filename in filenames:
+                filepath = os.path.join(root, filename)
+                x = preprocessAudioFile(load_audio(filepath)).transpose()
+                y = np.zeros(outputLabelShape)
+                # print(filepath, 0, y.shape)
+
+                xList.append(x)
+                yList.append(y.transpose())
+
+    return xList,yList
+
+def shuffle_data_and_labels(dataList, labelsList):
+    tempList = list(zip(dataList, labelsList))
+    random.shuffle(tempList)
+    dataList, labelsList = zip(*tempList)
+
+    return dataList, labelsList
+
+def get_trainDataAndLabels(annotationCsvPath, negativeSoundsDir, outputLabelShape):
+    xList, yList = get_sickDataAndLabels(annotationCsvPath, outputLabelShape)
+    tempXList, tempYList = get_not_sickDataAndLabels(negativeSoundsDir, outputLabelShape)
+    xList.extend(tempXList)
+    yList.extend(tempYList)
+
+    xList, yList = shuffle_data_and_labels(xList, yList)
+
+    X_arr = np.array(xList)
+    Y_arr = np.array(yList)
+
+    return X_arr, Y_arr
+
+
+if __name__ == "__main__":
+    annoCSVFilePath_train = r"sampleInput\train\sick\cough_sneeze_detection11May2020_16h42m23s_export.csv"
+    negativeSoundsDir_train = r"sampleInput\train\not_sick"
+    annoCSVFilePath_dev = r"sampleInput\train\sick\cough_sneeze_detection11May2020_16h42m23s_export.csv"
+    negativeSoundsDir_dev = r"sampleInput\train\not_sick"
+
+    Ty = 685
+    Tx = 2754
+    n_freq = 101
+
+    X, Y = get_trainDataAndLabels(annoCSVFilePath_train, negativeSoundsDir_train, (1, Ty))
+    model = create_model(input_shape = (Tx, n_freq))
+    print(model.summary())
+
+    opt = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, decay=0.01)
+    model.compile(loss='binary_crossentropy', optimizer=opt, metrics=["accuracy"])
+    model.fit(X, Y, batch_size=5, epochs=5)
+
+    # Xdev, Ydev = get_dataAndLabels(annoCSVFilePath_dev, negativeSoundsDir_dev, (1, Ty))
+    Xdev, Ydev = X, Y
+    loss, acc = model.evaluate(Xdev, Ydev)
+    print("hola::accuracy: ", acc)
+
+    model_json = model.to_json()
+    with open("./model/newModel.json", 'w') as jsonFile:
+        jsonFile.write(model_json)
+    model.save_weights("./model/newModel.h5")
