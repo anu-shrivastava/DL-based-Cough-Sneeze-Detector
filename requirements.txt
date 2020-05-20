@@ -9,7 +9,7 @@ cycler==0.10.0
 decorator==4.4.2
 grpcio==1.28.1
 h5py==2.10.0
-httplib2==0.17.3
+httplib2==0.18.0
 idna==2.9
 ipython==7.14.0
 ipython-genutils==0.2.0
